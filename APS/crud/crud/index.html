@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Usuários</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        @media (max-width: 600px) {
+            table {
+                font-size: 14px;
+            }
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Lista de Usuários</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody id="userTable">
+                <!-- Usuários serão inseridos aqui -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function fetchUsers() {
+            try {
+                const response = await fetch('http://localhost:3000/api/users');
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar usuários');
+                }
+                const users = await response.json();
+                const tableBody = document.getElementById('userTable');
+                tableBody.innerHTML = '';
+
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${user.name}</td><td>${user.email}</td>`;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erro:', error);
+                document.getElementById('userTable').innerHTML = `<tr><td colspan="2">Erro ao carregar usuários</td></tr>`;
+            }
+        }
+
+        // Chama a função ao carregar a página
+        fetchUsers();
+    </script>
+
+</body>
+</html>
